@@ -1,0 +1,36 @@
+#buttons-appear-here {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#topicButtons {
+    margin: 10px;
+    color: black;
+    background-color: rgb(245, 194, 56);
+    font-weight: bold;
+}
+
+.images {
+    margin: 10px;
+}
+
+#searchHere {
+    float: right;
+    margin-right: 20px;
+    margin-top: 100px;
+    width: 400px
+}
+
+#userInput {
+    width: 400px;
+    margin-bottom: 10px;
+}
+
+#gifs-appear-here {
+    margin: 10px;
+}
+
+p {
+margin: 20px;
+
+}
