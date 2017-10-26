@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    // Array of topics to use to query the Giphy API for gifs
     var topics = [
         "Cheeseburger",
         "Pizza",
@@ -12,12 +13,13 @@ $(document).ready(function () {
 
     var searchTerm = "";
 
-    var isStatic = true;
+    // var isStatic = true;
 
-    var static;
+    // var static;
 
-    var animate;
+    // var animate;
 
+    // Function to iterate through the topics array and create a button for each item
     function renderButtons() {
         for (var i = 0; i < topics.length; i++) {
             var a = $("<button class='btn btn-default' id='topicButtons'>").text(topics[i]);
@@ -27,6 +29,7 @@ $(document).ready(function () {
         }
     }
 
+    // Function with AJAX call to the Giphy API
     function displayGif() {
 
         $('.food').on("click", function () {
@@ -34,59 +37,46 @@ $(document).ready(function () {
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
                 foodItem + "&api_key=AV3UsdwQLJ2J3scDVcBiFH9YuhCn32qH&limit=10";
 
-            $.ajax({ url: queryURL, method: "GET" })
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).done(function (response) {
+                console.log(response);
+                var results = response.data;
 
-                .done(function (response) {
-                    var results = response.data;
-                    makeAnimated(i);
+                for (var i = 0; i < results.length; i++) {
 
+                    var staticURL = results[i].images.fixed_height_still.url;
+                    var animatedURL = results[i].images.fixed_height.url;
 
-                    for (var i = 0; i < results.length; i++) {
+                    var rating = results[i].rating;
+                    var ratingP = $("<p id='ratings'>").text("Rating: " + rating);
 
-                        var rating = results[i].rating;
-                        var ratingDiv = $("<div id='ratings'>").text("Rating: " + rating);
-
-                        var gifImage = $("<img class='images'>");
-                        static = results[i].images.fixed_height_still.url;
-                        gifImage.attr("src", static);
-                        console.log(isStatic);
-
-                        $("#gifs-appear-here").prepend(gifImage);
-                        $("#gifs-appear-here").prepend(ratingDiv);
-
-                        // $("img").on("click", function (response) {
-                        //     isStatic = false;
-                        //     console.log(isStatic);
-    
-                        //     var gifImage = $("<img class='images'>");
-                        //     animate = results[i].images.fixed_height.url;
-                        //     gifImage.attr("src", animate);
-    
-                        //     $("#gifs-appear-here").prepend(gifImage);
-                        // })
-                    }
-                
-                });
-
-                function makeAnimated(passed) {
-                    console.log(passed);
-                $("img").on("click", function () {
-                    isStatic = false;
-                    console.log(isStatic);
-
-                    var gifImage = $("<img class='images'>");
-                    animate = results[i].images.fixed_height.url;
-                    gifImage.attr("src", animate);
+                    var gifImage = $("<img id='gifs'>");
+                    // static = results[i].images.fixed_height_still.url;
+                    // gifImage.attr("src", static);
+                    gifImage.attr("src", staticURL);
+                    gifImage.attr("data-state", "still");
+                    gifImage.attr("data-still", staticURL);
+                    gifImage.attr("data-animate", animatedURL);
 
                     $("#gifs-appear-here").prepend(gifImage);
-                })
+                    $("#gifs-appear-here").prepend(ratingP);
+            
+
+                
                 }
+
+            });
+
 
         });
     }
 
-    function runQuery() {
 
+    // Function holding the click event for the submit button which creates a button for the
+    // search term input by the user and then calls the function for running the Giphy query.
+    function runQuery() {
         $("#addButton").on("click", function () {
             searchTerm = $("#userInput").val()
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=AV3UsdwQLJ2J3scDVcBiFH9YuhCn32qH&limit=10";
@@ -98,6 +88,21 @@ $(document).ready(function () {
 
             displayGif();
         });
+    }
+
+    $(document).on("click", "#gifs", playStopGifs);
+
+    function playStopGifs() {
+            var state = $(this).attr("data-state");
+            console.log(this);
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+            }
+    
     }
 
     renderButtons();

@@ -10,8 +10,13 @@
     font-weight: bold;
 }
 
-.images {
+img {
     margin: 10px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+label {
     margin-top: 30px;
 }
 
@@ -41,4 +46,6 @@
 #ratings {
     position: absolute;
     display: inline-block;
+    margin-left: 10px;
+    font-weight: bold;
 }
