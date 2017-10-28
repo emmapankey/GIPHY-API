@@ -1,19 +1,19 @@
 $(document).ready(function () {
     
-        // Array of topics to use to query the Giphy API for gifs
-        var topics = [
-            "Cheeseburger",
-            "Pizza",
-            "Bacon",
-            "Doughnut",
-            "Sushi",
-            "Ice Cream",
-            "Burrito"
-        ];
+    // Array of topics to use to query the Giphy API
+    var topics = [
+        "Cheeseburger",
+        "Pizza",
+        "Bacon",
+        "Doughnut",
+        "Sushi",
+        "Ice Cream",
+        "Burrito"
+    ];
     
         var searchTerm = "";
  
-        // Function to iterate through the topics array and create a button for each item
+        // Function to iterate through the topics array and create a button for each item.
         function renderButtons() {
             $("#buttons-appear-here").empty();
             for (var i = 0; i < topics.length; i++) {
@@ -24,12 +24,12 @@ $(document).ready(function () {
             }
         }
 
-        // Function with AJAX call to the Giphy API
+        // Function with AJAX call to the Giphy API. Data for still and animated is added to the returned gifs.
         function displayGif() {
 
                 var foodItem = $(this).attr("data-name");
                 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                    foodItem + "&api_key=AV3UsdwQLJ2J3scDVcBiFH9YuhCn32qH&limit=2";
+                    foodItem + "&api_key=AV3UsdwQLJ2J3scDVcBiFH9YuhCn32qH&limit=10";
     
                 $.ajax({
                     url: queryURL,
@@ -47,8 +47,7 @@ $(document).ready(function () {
                         var ratingP = $("<p id='ratings'>").text("Rating: " + rating);
     
                         var gifImage = $("<img id='gifs'>");
-                        // static = results[i].images.fixed_height_still.url;
-                        // gifImage.attr("src", static);
+                
                         gifImage.attr("src", staticURL);
                         gifImage.attr("data-state", "still");
                         gifImage.attr("data-still", staticURL);
@@ -56,21 +55,11 @@ $(document).ready(function () {
     
                         $("#gifs-appear-here").prepend(gifImage);
                         $("#gifs-appear-here").prepend(ratingP);
-                
-    
-                    
                     }
-    
                 });
-    
-    
-            // });
         }
     
-    
-        // Function holding the click event for the submit button which creates a button for the
-        // search term input by the user and then calls the function for running the Giphy query.
-        // function runQuery() {
+        // Click event for the submit button which creates a button for the search term input by the user.
             $("#addButton").on("click", function () {
                 searchTerm = $("#userInput").val()
                 var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=AV3UsdwQLJ2J3scDVcBiFH9YuhCn32qH&limit=10";
@@ -84,12 +73,8 @@ $(document).ready(function () {
 
                 renderButtons();
             });
-    
-        $(document).on("click", "#gifs", playStopGifs);
 
-        $(document).on("click", ".food", displayGif);
-
-    
+        // Function for changing the gifs to their still or animated state.
         function playStopGifs() {
                 var state = $(this).attr("data-state");
                 console.log(this);
@@ -102,7 +87,11 @@ $(document).ready(function () {
                 }
         
         }
+
+        $(document).on("click", "#gifs", playStopGifs);
+        
+        $(document).on("click", ".food", displayGif);
     
         renderButtons();
     
-    });
+});
